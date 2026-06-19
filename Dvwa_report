@@ -1,1 +1,66 @@
+# DVWA Penetration Test Report
 
+**Tester:** [MRRandy-007]
+**Date:** June 18, 2026
+**Target:** DVWA localhost (lab environment)
+**Purpose:** Ethical hacking practice
+
+---
+
+## FINDING 1: Brute Force Login
+**Severity:** CRITICAL
+**Tool:** Hydra v9.6
+
+**Description:**
+The login form has no account lockout or rate 
+limiting. Passwords can be guessed automatically.
+
+**Proof:**
+- Hydra cracked admin password in 14 seconds
+- Password found: 12345
+- Wordlist used: rockyou.txt (14 million passwords)
+
+**Remediation:**
+- Lock account after 5 failed attempts
+- Add CAPTCHA
+- Enforce strong password policy
+
+---
+
+## FINDING 2: SQL Injection
+**Severity:** CRITICAL
+**Tool:** Manual browser input
+
+**Description:**
+User input is passed directly to database without
+sanitization allowing data extraction.
+
+**Proof:**
+- Payload: 1' OR '1'='1
+- Extracted full user database
+- Database identified as MariaDB
+
+**Remediation:**
+- Use parameterized queries
+- Disable verbose error messages
+- Input validation on all fields
+
+---
+
+## FINDING 3: Command Injection
+**Severity:** CRITICAL
+**Tool:** Manual browser input
+
+**Description:**
+User input is passed directly to system commands
+allowing execution of arbitrary OS commands.
+
+**Proof:**
+- Payload: 127.0.0.1 && whoami
+- Server returned: www-data
+- Server path revealed: /var/www/html
+
+**Remediation:**
+- Never pass user input to system commands
+- Sanitize and validate all inputs
+- Run web server with minimal privileges
